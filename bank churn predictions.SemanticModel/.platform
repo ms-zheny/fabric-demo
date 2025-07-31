@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "bank churn predictions"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "97bb9cc4-83d0-9342-4b80-9ea4565a762c"
+  }
+}
