@@ -282,6 +282,8 @@ with mlflow.start_run(run_name="rfc2_sm") as run:
 # CELL ********************
 
 import numpy as np
+from mlflow.models.signature import infer_signature
+
 # lgbm_model
 mlflow.lightgbm.autolog(registered_model_name='lgbm_sm') # Register the trained model with autologging
 lgbm_sm_model = LGBMClassifier(learning_rate = 0.07, 
@@ -299,6 +301,7 @@ with mlflow.start_run(run_name="lgbm_sm") as run:
     X_res = X_res.astype(np.float32)
     X_val = X_val.astype(np.float32)
     y_res = y_res.astype(np.int64)
+    y_val = y_val.astype(int)
 
     lgbm_sm_model.fit(X_res, y_res.ravel()) # Balanced training data
     y_pred = lgbm_sm_model.predict(X_val)
@@ -309,6 +312,21 @@ with mlflow.start_run(run_name="lgbm_sm") as run:
     cr_lgbm_sm = classification_report(y_val, y_pred)
     cm_lgbm_sm = confusion_matrix(y_val, y_pred)
     roc_auc_lgbm_sm = roc_auc_score(y_res, lgbm_sm_model.predict_proba(X_res)[:, 1])
+
+    # Convert to DataFrame for schema inference
+    X_val_df = pd.DataFrame(X_val)
+    y_pred_df = pd.Series(y_pred)
+
+    # Infer model signature
+    signature = infer_signature(X_val_df, y_pred_df)
+
+    # Log the model with signature explicitly
+    mlflow.lightgbm.log_model(
+        lgbm_sm_model,
+        artifact_path="model",
+        signature=signature,
+        registered_model_name="lgbm_sm"
+    )
 
 # METADATA ********************
 

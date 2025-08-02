@@ -102,7 +102,7 @@ model = MLFlowTransformer(
     inputCols=list(df_test.columns),
     outputCol='predictions',
     modelName='lgbm_sm',
-    modelVersion=6
+    modelVersion=10
 )
 
 # METADATA ********************
@@ -140,7 +140,7 @@ from pyspark.ml.feature import SQLTransformer
 
 # Substitute "model_name", "model_version", and "features" below with values for your own model name, model version, and feature columns
 model_name = 'lgbm_sm'
-model_version = 6
+model_version = 10
 features = df_test.columns
 
 sqlt = SQLTransformer().setStatement( 
