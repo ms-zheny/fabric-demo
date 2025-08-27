@@ -8,12 +8,12 @@
 # META   },
 # META   "dependencies": {
 # META     "lakehouse": {
-# META       "default_lakehouse": "6878cb5f-0d25-4537-95b8-6f343151d634",
-# META       "default_lakehouse_name": "Lakehouse01",
-# META       "default_lakehouse_workspace_id": "ecc4dbf3-335f-4620-855b-2e7d61f8ce1b",
+# META       "default_lakehouse": "376a05a3-20db-454d-8ef8-58f743d92bda",
+# META       "default_lakehouse_name": "lakehouse",
+# META       "default_lakehouse_workspace_id": "b4589ac4-a58a-44aa-9cdb-edd1ca8c5ebc",
 # META       "known_lakehouses": [
 # META         {
-# META           "id": "6878cb5f-0d25-4537-95b8-6f343151d634"
+# META           "id": "376a05a3-20db-454d-8ef8-58f743d92bda"
 # META         }
 # META       ]
 # META     }
@@ -225,7 +225,7 @@ new_train = pd.concat([X_res, y_res], axis=1)
 
 # MARKDOWN ********************
 
-# * Train the model using Random Forest with maximum depth of 4 and 4 features
+# * Train the model using **Random Forest** with maximum depth of **4 and 4 features**
 
 # CELL ********************
 
@@ -251,7 +251,7 @@ with mlflow.start_run(run_name="rfc1_sm") as run:
 
 # MARKDOWN ********************
 
-# * Train the model using Random Forest with maximum depth of 8 and 6 features
+# * Train the model using **Random Forest** with maximum depth of **8 and 6 features**
 
 # CELL ********************
 
@@ -277,7 +277,7 @@ with mlflow.start_run(run_name="rfc2_sm") as run:
 
 # MARKDOWN ********************
 
-# * Train the model using LightGBM
+# * Train the model using **LightGBM**
 
 # CELL ********************
 
@@ -357,15 +357,24 @@ with mlflow.start_run(run_name="lgbm_sm") as run:
 
 # CELL ********************
 
+y_true = np.asarray(y_val)
+
 # Define run_uri to fetch the model
 # mlflow client: mlflow.model.url, list model
 load_model_rfc1_sm = mlflow.sklearn.load_model(f"runs:/{rfc1_sm_run_id}/model")
 load_model_rfc2_sm = mlflow.sklearn.load_model(f"runs:/{rfc2_sm_run_id}/model")
 load_model_lgbm1_sm = mlflow.lightgbm.load_model(f"runs:/{lgbm1_sm_run_id}/model")
+
 # Assess the performance of the loaded model on validation dataset
 ypred_rfc1_sm_v1 = load_model_rfc1_sm.predict(X_val) # Random Forest with max depth of 4 and 4 features
 ypred_rfc2_sm_v1 = load_model_rfc2_sm.predict(X_val) # Random Forest with max depth of 8 and 6 features
 ypred_lgbm1_sm_v1 = load_model_lgbm1_sm.predict(X_val) # LightGBM
+
+
+ypred_rfc1_sm_v1 = np.asarray(ypred_rfc1_sm_v1).astype(y_true.dtype)
+ypred_rfc2_sm_v1 = np.asarray(ypred_rfc2_sm_v1).astype(y_true.dtype)
+ypred_lgbm1_sm_v1 = np.asarray(ypred_lgbm1_sm_v1).astype(y_true.dtype)
+
 
 # METADATA ********************
 
